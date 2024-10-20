@@ -15,6 +15,13 @@
       "when": 1729375785621,
       "tag": "0001_oval_fixer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1729432818930,
+      "tag": "0002_fuzzy_major_mapleleaf",
+      "breakpoints": true
     }
   ]
 }

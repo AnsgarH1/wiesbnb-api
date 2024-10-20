@@ -32,3 +32,14 @@ export const CreatedResponse = z
     }),
   })
   .openapi("CreatedResponse");
+
+export const NotImplementedResponse = z
+  .object({
+    code: z.number().openapi({
+      example: 501,
+    }),
+    message: z.string().openapi({
+      example: "Not implemented yet",
+    }),
+  })
+  .openapi("NotImplementedResponse");

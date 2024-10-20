@@ -85,7 +85,7 @@ export const GetApartmentsResponse = z.array(ApartmentReponseSchema);
 export const GetApartmentsQueryParams = z.object({
   id: z.coerce
     .number()
-    .pipe(ApartmentIdSchema)
+    .pipe(ApartmentIdSchema) // Needed to return branded id-type
     .optional()
     .openapi({ param: { in: "query" } }),
   numberOfRooms: z.coerce
@@ -106,6 +106,6 @@ export const GetApartmentPerIdResponse = ApartmentReponseSchema.optional();
 export const GetApartmentPerIdParams = z.object({
   id: z.coerce
     .number()
-    .pipe(ApartmentIdSchema)
+    .pipe(ApartmentIdSchema) // Needed to return branded id-type
     .openapi({ param: { in: "path" } }),
 });

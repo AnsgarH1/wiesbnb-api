@@ -3,6 +3,7 @@ import { swaggerUI } from "@hono/swagger-ui";
 
 import { apartments } from "./api/apartments/apartments.controller";
 import { admin } from "./api/admin/admin.controller";
+import { bookings } from "./api/bookings/bookings.controller";
 
 const app = new OpenAPIHono();
 
@@ -17,6 +18,7 @@ app.doc("/doc", {
 });
 
 app.route("/", apartments);
+app.route("/", bookings);
 app.route("/", admin);
 app.get("/", swaggerUI({ url: "/doc" }));
 

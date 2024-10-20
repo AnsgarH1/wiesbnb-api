@@ -16,7 +16,9 @@ export const apartments = new OpenAPIHono();
 
 apartments.openapi(getApartmentsRoute, async (c) => {
   const db = database();
+
   const db_response = await db.select().from(schema.apartmentsTable);
+
   const response_data = GetApartmentsResponse.parse(db_response);
 
   return c.json(response_data, 200);

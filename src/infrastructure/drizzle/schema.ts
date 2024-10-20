@@ -1,7 +1,6 @@
 import { sql } from "drizzle-orm";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { z } from "zod";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const ApartmentIdSchema = z
   .number()
@@ -10,7 +9,12 @@ export const ApartmentIdSchema = z
   .brand("apartment_id");
 export const BookingIdSchema = z.number().int().positive().brand("booking_id");
 
-const guestInfo = z.object({
+export const PaymentInfoSchema = z.object({
+  paymentType: z.enum(["creditCard", "paypal"]),
+  paymentReference: z.string(),
+});
+
+export const GuestInfoSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   birthDate: z.date(),
@@ -21,11 +25,6 @@ const guestInfo = z.object({
     city: z.string(),
     postalCode: z.string(),
     country: z.string(),
-  }),
-  paymentInfo: z.object({
-    type: z.enum(["creditCard", "paypal"]),
-    cardNumber: z.string().optional(),
-    paypalEmail: z.string().optional(),
   }),
   additionalGuests: z
     .array(
@@ -38,7 +37,7 @@ const guestInfo = z.object({
     .optional(),
 });
 
-const apartmentAdress = z.object({
+export const ApartmentAdressSchema = z.object({
   street: z.string(),
   city: z.string(),
   postalCode: z.string(),
@@ -52,8 +51,9 @@ const apartmentAdress = z.object({
 type ApartmentId = z.infer<typeof ApartmentIdSchema>;
 type BookingId = z.infer<typeof BookingIdSchema>;
 
-type GuestInfo = z.infer<typeof guestInfo>;
-type ApartmentAddress = z.infer<typeof apartmentAdress>;
+type GuestInfo = z.infer<typeof GuestInfoSchema>;
+type ApartmentAddress = z.infer<typeof ApartmentAdressSchema>;
+type PaymentInfo = z.infer<typeof PaymentInfoSchema>;
 
 export const apartmentsTable = sqliteTable("apartments_table", {
   id: int().$type<ApartmentId>().primaryKey({ autoIncrement: true }),
@@ -73,16 +73,10 @@ export const bookingsTable = sqliteTable("bookings_table", {
   apartmentId: int()
     .notNull()
     .references(() => apartmentsTable.id),
-  userId: int().notNull(),
   startDate: text().notNull(),
   endDate: text().notNull(),
   createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
   updatedAt: text().default(sql`(CURRENT_TIMESTAMP)`),
   guestInfo: text({ mode: "json" }).$type<GuestInfo>(),
+  paymentInfo: text({ mode: "json" }).$type<PaymentInfo>(),
 });
-
-export const SelectApartmentSchema = createSelectSchema(apartmentsTable);
-export const InsertApartmentSchema = createInsertSchema(apartmentsTable);
-
-export const SelectBookingSchema = createSelectSchema(bookingsTable);
-export const InsertBookingSchema = createInsertSchema(bookingsTable);

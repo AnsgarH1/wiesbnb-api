@@ -1,6 +1,4 @@
 import { z } from "@hono/zod-openapi";
-import { InsertApartmentSchema } from "../../infrastructure/drizzle/schema";
-
 export const CreateNewApartmentResponse = z.object({
   status: z.number(),
   message: z.string(),
