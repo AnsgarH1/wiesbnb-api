@@ -1,9 +1,8 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { bookApartmentRoute } from "./bookings.routes";
+
 import { database } from "../../infrastructure/drizzle";
-import { createInsertSchema } from "drizzle-zod";
 import * as schema from "../../infrastructure/drizzle/schema";
-import { z } from "zod";
 
 export const bookings = new OpenAPIHono();
 

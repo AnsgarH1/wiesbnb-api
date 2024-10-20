@@ -2,7 +2,6 @@ import { createRoute } from "@hono/zod-openapi";
 import {
   CreatedResponse,
   ErrorResponse,
-  NotImplementedResponse,
 } from "../common/response.schema";
 import { CreateNewBookingRequestBody } from "./bookings.schema";
 
@@ -35,13 +34,13 @@ export const bookApartmentRoute = createRoute({
       },
       description: "Returns an error, if the request is invalid",
     },
-    501: {
+    500: {
       content: {
         "application/json": {
-          schema: NotImplementedResponse,
+          schema: ErrorResponse,
         },
       },
-      description: "Not implemented yet",
+      description: "Returns an Error",
     },
   },
 });
