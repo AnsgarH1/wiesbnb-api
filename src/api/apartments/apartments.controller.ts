@@ -1,30 +1,45 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { getApartmentsRoute } from "./apartments.routes";
+import {
+  getApartmentsRoute,
+  getApartmentPerIdRoute,
+} from "./apartments.routes";
 
 import { database } from "../../infrastructure/drizzle";
 import * as schema from "../../infrastructure/drizzle/schema";
-import { Resource } from "sst";
-import { ApartmentsSchema } from "./apartments.schema";
-import { fromZodError } from "zod-validation-error";
+import { eq } from "drizzle-orm";
+import {
+  GetApartmentPerIdResponse,
+  GetApartmentsResponse,
+} from "./apartments.schema";
 
 export const apartments = new OpenAPIHono();
 
 apartments.openapi(getApartmentsRoute, async (c) => {
-  console.log("GET /apartments");
-  const db = database(Resource.Wiesbnb_Database);
-  const db_apartments = await db.select().from(schema.apartmentsTable);
-  console.log("Loaded following apartments from DB: ", db_apartments);
-  const { data, error } = ApartmentsSchema.safeParse(db_apartments);
-  if (error) {
-    console.log("Error parsing db_apartments: ", fromZodError(error));
+  const db = database();
+  const db_response = await db.select().from(schema.apartmentsTable);
+  const response_data = GetApartmentsResponse.parse(db_response);
+
+  return c.json(response_data, 200);
+});
+
+apartments.openapi(getApartmentPerIdRoute, async (c) => {
+  const { id } = c.req.valid("param");
+
+  const db = database();
+
+  const db_response = await db
+    .select()
+    .from(schema.apartmentsTable)
+    .where(eq(schema.apartmentsTable.id, id));
+
+  if (db_response.length === 0) {
     return c.json(
-      {
-        error: fromZodError(error).toString(),
-        code: 400,
-      },
-      400
+      { message: `No apartment found with id ${id}`, code: 404 },
+      404
     );
   }
 
-  return c.json(data, 200);
+  const response_data = GetApartmentPerIdResponse.parse(db_response[0]);
+
+  return c.json(response_data, 200);
 });

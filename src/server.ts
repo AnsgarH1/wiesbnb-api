@@ -2,6 +2,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
 import { apartments } from "./api/apartments/apartments.controller";
+import { admin } from "./api/admin/admin.controller";
 
 const app = new OpenAPIHono();
 
@@ -16,7 +17,7 @@ app.doc("/doc", {
 });
 
 app.route("/", apartments);
-
+app.route("/", admin);
 app.get("/", swaggerUI({ url: "/doc" }));
 
 export default app;

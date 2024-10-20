@@ -1,5 +1,8 @@
 import { drizzle } from "drizzle-orm/d1";
+import * as schema from "./schema";
 
-export const database = (d1database: D1Database) => {
-  return drizzle(d1database);
+import { Resource } from "sst";
+
+export const database = () => {
+  return drizzle(Resource.Wiesbnb_Database, { schema });
 };

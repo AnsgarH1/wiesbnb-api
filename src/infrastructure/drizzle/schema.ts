@@ -1,11 +1,14 @@
 import { sql } from "drizzle-orm";
-import { int, sqliteTable, text, blob } from "drizzle-orm/sqlite-core";
+import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
-const apartmentId = z.number().int().positive().brand("apartment_id");
-const addressId = z.number().int().positive().brand("address_id");
-const bookingId = z.number().int().positive().brand("booking_id");
+export const ApartmentIdSchema = z
+  .number()
+  .int()
+  .positive()
+  .brand("apartment_id");
+export const BookingIdSchema = z.number().int().positive().brand("booking_id");
 
 const guestInfo = z.object({
   firstName: z.string(),
@@ -46,8 +49,8 @@ const apartmentAdress = z.object({
   }),
 });
 
-type ApartmentId = z.infer<typeof apartmentId>;
-type BookingId = z.infer<typeof bookingId>;
+type ApartmentId = z.infer<typeof ApartmentIdSchema>;
+type BookingId = z.infer<typeof BookingIdSchema>;
 
 type GuestInfo = z.infer<typeof guestInfo>;
 type ApartmentAddress = z.infer<typeof apartmentAdress>;
@@ -78,8 +81,8 @@ export const bookingsTable = sqliteTable("bookings_table", {
   guestInfo: text({ mode: "json" }).$type<GuestInfo>(),
 });
 
-export const selectApartmentSchema = createSelectSchema(apartmentsTable);
-export const insertApartmentSchema = createInsertSchema(apartmentsTable);
+export const SelectApartmentSchema = createSelectSchema(apartmentsTable);
+export const InsertApartmentSchema = createInsertSchema(apartmentsTable);
 
-export const selectBookingSchema = createSelectSchema(bookingsTable);
-export const insertBookingSchema = createInsertSchema(bookingsTable);
+export const SelectBookingSchema = createSelectSchema(bookingsTable);
+export const InsertBookingSchema = createInsertSchema(bookingsTable);
