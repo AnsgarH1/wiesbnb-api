@@ -28,6 +28,7 @@
     "drizzle-kit": "^0.26.2",
     "eslint": "^9.13.0",
     "globals": "^15.11.0",
+    "prettier": "^3.3.3",
     "tsx": "^4.19.1",
     "typescript-eslint": "^8.10.0"
   }

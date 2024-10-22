@@ -3,9 +3,10 @@
 export default $config({
   app(input) {
     return {
-      name: "WiesBnB-Api",
+      name: "Wiesbnb-Api",
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "cloudflare",
+      
     };
   },
   async run() {
@@ -29,18 +30,13 @@ export default $config({
       handler: "./src/server.ts",
       url: true,
       link: [databaseId, cloudflareAccountId, cloudflareApiToken, db],
-    });
-
-    new sst.x.DevCommand("Drizzle Studio", {
-      link: [db, databaseId, cloudflareAccountId, cloudflareApiToken],
-      dev: {
-        autostart: true,
-        command: "pnpm drizzle-kit studio",
-      },
+      domain: "wiesbnb-api.web-engineering.dev"
+      
     });
 
     return {
       api: worker.url,
+      db_id: databaseId,
     };
   },
 });

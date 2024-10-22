@@ -1,12 +1,17 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { bookApartmentRoute } from "./bookings.routes";
+import { bookApartmentRoute, cancelBookingRoute } from "./booking.routes";
 
 import { database } from "../../infrastructure/drizzle";
 import * as schema from "../../infrastructure/drizzle/schema";
+import {
+  GuestInfoSchema,
+  PaymentInfoSchema,
+} from "../../common/database.schema";
+import { eq } from "drizzle-orm";
 
-export const bookings = new OpenAPIHono();
+export const booking = new OpenAPIHono();
 
-bookings.openapi(bookApartmentRoute, async (c) => {
+booking.openapi(bookApartmentRoute, async (c) => {
   const requestParams = c.req.valid("json");
 
   const db = database();
@@ -45,7 +50,7 @@ bookings.openapi(bookApartmentRoute, async (c) => {
         )
       ),
   });
-    if (existing_booking) {
+  if (existing_booking) {
     return c.json(
       {
         message: `Booking ${existing_booking.id} already exists for this apartment and date range`,
@@ -55,9 +60,9 @@ bookings.openapi(bookApartmentRoute, async (c) => {
     );
   }
 
-  const db_guestInfo = schema.GuestInfoSchema.parse(requestParams.guestInfo);
+  const db_guestInfo = GuestInfoSchema.parse(requestParams.guestInfo);
 
-  const db_paymentInfo = schema.PaymentInfoSchema.parse({
+  const db_paymentInfo = PaymentInfoSchema.parse({
     paymentType: requestParams.paymentInfo.paymentType,
     paymentReference:
       requestParams.paymentInfo.paymentType === "creditCard"
@@ -84,12 +89,73 @@ bookings.openapi(bookApartmentRoute, async (c) => {
       500
     );
   }
-  console.log(db_response.results);
+  console.log("create booking response", db_response);
   return c.json(
     {
       message: "Booking created successfully",
       code: 201,
     },
     201
+  );
+});
+
+booking.openapi(cancelBookingRoute, async (c) => {
+  const requestParams = c.req.valid("param");
+
+  const db = database();
+
+  // check if booking exists
+  const booking = await db.query.bookingsTable.findFirst({
+    where: (booking, { eq }) => eq(booking.id, requestParams.bookingId),
+  });
+
+  // only allow cancellation if booking exists and lastname and email match
+  const isCancellationAllowed =
+    !!booking &&
+    booking.guestInfo?.lastName === requestParams.lastName &&
+    booking.guestInfo?.email === requestParams.email;
+
+  if (!isCancellationAllowed) {
+    return c.json(
+      {
+        message: `Booking with id ${requestParams.bookingId} does not exist or is not booked by given guest.`,
+        code: 400,
+      },
+      400
+    );
+  }
+
+  if (booking.cancelled) {
+    return c.json(
+      {
+        message: `Booking with id ${requestParams.bookingId} is already cancelled.`,
+        code: 400,
+      },
+      400
+    );
+  }
+
+  const db_response = await db
+    .delete(schema.bookingsTable)
+    .where(eq(schema.bookingsTable.id, requestParams.bookingId));
+
+  console.log("cancel booking response", db_response);
+
+  if (db_response.error) {
+    return c.json(
+      {
+        message: "Failed to cancel booking",
+        code: 500,
+      },
+      500
+    );
+  }
+
+  return c.json(
+    {
+      message: "Booking cancelled successfully",
+      code: 200,
+    },
+    200
   );
 });

@@ -1,59 +1,14 @@
 import { sql } from "drizzle-orm";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { z } from "zod";
 
-export const ApartmentIdSchema = z
-  .number()
-  .int()
-  .positive()
-  .brand("apartment_id");
-export const BookingIdSchema = z.number().int().positive().brand("booking_id");
-
-export const PaymentInfoSchema = z.object({
-  paymentType: z.enum(["creditCard", "paypal"]),
-  paymentReference: z.string(),
-});
-
-export const GuestInfoSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  birthDate: z.date(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.object({
-    street: z.string(),
-    city: z.string(),
-    postalCode: z.string(),
-    country: z.string(),
-  }),
-  additionalGuests: z
-    .array(
-      z.object({
-        firstName: z.string(),
-        lastName: z.string(),
-        birthDate: z.date(),
-      })
-    )
-    .optional(),
-});
-
-export const ApartmentAdressSchema = z.object({
-  street: z.string(),
-  city: z.string(),
-  postalCode: z.string(),
-  country: z.string(),
-  coords: z.object({
-    lat: z.number(),
-    lng: z.number(),
-  }),
-});
-
-type ApartmentId = z.infer<typeof ApartmentIdSchema>;
-type BookingId = z.infer<typeof BookingIdSchema>;
-
-type GuestInfo = z.infer<typeof GuestInfoSchema>;
-type ApartmentAddress = z.infer<typeof ApartmentAdressSchema>;
-type PaymentInfo = z.infer<typeof PaymentInfoSchema>;
+import {
+  ApartmentAddress,
+  ApartmentId,
+  BookingId,
+  GuestInfo,
+  ImageList,
+  PaymentInfo,
+} from "../../common/database.schema";
 
 export const apartmentsTable = sqliteTable("apartments_table", {
   id: int().$type<ApartmentId>().primaryKey({ autoIncrement: true }),
@@ -62,10 +17,13 @@ export const apartmentsTable = sqliteTable("apartments_table", {
   numberOfRooms: int().notNull(),
   maxAdults: int().notNull(),
   maxChildren: int().notNull(),
+  bedAmountAdults: int().notNull(),
+  bedAmountChildren: int().notNull(),
+  images: text({ mode: "json" }).$type<ImageList>().notNull(),
   adress: text({ mode: "json" }).$type<ApartmentAddress>().notNull(),
   pricePerNight: int().notNull(),
-  createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
-  updatedAt: text().default(sql`(CURRENT_TIMESTAMP)`),
+  createdAt: int({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: int({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
 });
 
 export const bookingsTable = sqliteTable("bookings_table", {
@@ -73,10 +31,11 @@ export const bookingsTable = sqliteTable("bookings_table", {
   apartmentId: int()
     .notNull()
     .references(() => apartmentsTable.id),
+  cancelled: int({ mode: "boolean" }).default(false),
   startDate: text().notNull(),
   endDate: text().notNull(),
-  createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
-  updatedAt: text().default(sql`(CURRENT_TIMESTAMP)`),
+  createdAt: int({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: int({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
   guestInfo: text({ mode: "json" }).$type<GuestInfo>(),
   paymentInfo: text({ mode: "json" }).$type<PaymentInfo>(),
 });

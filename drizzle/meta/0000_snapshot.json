@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "f50cfa14-be81-48fe-9e7e-ff7ef6bdbb1f",
+  "id": "181de779-11fc-42fb-ac95-366d6a76f2db",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "apartments_table": {
@@ -49,9 +49,30 @@
           "notNull": true,
           "autoincrement": false
         },
+        "bedAmountAdults": {
+          "name": "bedAmountAdults",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "bedAmountChildren": {
+          "name": "bedAmountChildren",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "images": {
+          "name": "images",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "adress": {
           "name": "adress",
-          "type": "blob",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -65,7 +86,7 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -73,7 +94,7 @@
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -103,12 +124,13 @@
           "notNull": true,
           "autoincrement": false
         },
-        "userId": {
-          "name": "userId",
+        "cancelled": {
+          "name": "cancelled",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
         },
         "startDate": {
           "name": "startDate",
@@ -126,7 +148,7 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -134,7 +156,7 @@
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -142,7 +164,14 @@
         },
         "guestInfo": {
           "name": "guestInfo",
-          "type": "blob",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "paymentInfo": {
+          "name": "paymentInfo",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
