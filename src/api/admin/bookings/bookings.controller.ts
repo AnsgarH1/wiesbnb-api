@@ -13,16 +13,14 @@ import {
   GetBookingsResponse,
 } from "./bookings.schema";
 import { eq } from "drizzle-orm";
-import { booking } from "../../booking/booking.controller";
-import { cancelBookingRoute } from "../../booking/booking.routes";
 
-const bookings = new OpenAPIHono();
+export const bookings = new OpenAPIHono();
 
 bookings.openapi(createNewBookingRoute, async (c) => {
   const bookingData = c.req.valid("json");
   const db = database();
 
-  const db_response = await db.insert(schema.bookingsTable).values(bookingData);
+  const db_response = await db.insert(schema.booking).values(bookingData);
 
   console.log("Insert response", db_response);
 
@@ -35,7 +33,7 @@ bookings.openapi(createNewBookingRoute, async (c) => {
 
 bookings.openapi(getBookingsRoute, async (c) => {
   const db = database();
-  const db_response = await db.select().from(schema.bookingsTable);
+  const db_response = await db.select().from(schema.booking);
 
   console.log("Get bookings response", db_response);
   const response_data = GetBookingsResponse.parse(db_response);
@@ -45,8 +43,8 @@ bookings.openapi(getBookingsRoute, async (c) => {
 bookings.openapi(getBookingPerIdRoute, async (c) => {
   const { id } = c.req.valid("param");
   const db = database();
-  const result = await db.query.bookingsTable.findFirst({
-    where: (booking, { eq }) => eq(schema.bookingsTable.id, id),
+  const result = await db.query.bookings.findFirst({
+    where: (booking, { eq }) => eq(schema.booking.id, id),
   });
 
   console.log("Get booking per id response", result);
@@ -66,7 +64,7 @@ bookings.openapi(updateBookingRoute, async (c) => {
 
   const db = database();
 
-  const oldBookingId = await db.query.bookingsTable.findFirst({
+  const oldBookingId = await db.query.bookings.findFirst({
     where: (booking, { eq }) => eq(booking.id, requestParams.id),
   });
 
@@ -78,9 +76,9 @@ bookings.openapi(updateBookingRoute, async (c) => {
   }
 
   const db_response = await db
-    .update(schema.bookingsTable)
+    .update(schema.booking)
     .set({ ...bookingData, updatedAt: new Date() })
-    .where(eq(schema.bookingsTable.id, requestParams.id));
+    .where(eq(schema.booking.id, requestParams.id));
 
   console.log("Update booking response", db_response);
 
@@ -90,14 +88,14 @@ bookings.openapi(updateBookingRoute, async (c) => {
   return c.json({ message: "Booking updated successfully", code: 204 }, 204);
 });
 
-booking.openapi(deleteBookingRoute, async (c) => {
+bookings.openapi(deleteBookingRoute, async (c) => {
   const requestParams = c.req.valid("param");
 
   const db = database();
 
   const db_response = await db
-    .delete(schema.bookingsTable)
-    .where(eq(schema.bookingsTable.id, requestParams.id));
+    .delete(schema.booking)
+    .where(eq(schema.booking.id, requestParams.id));
 
   console.log("Delete booking response", db_response);
 

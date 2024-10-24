@@ -19,9 +19,13 @@ export const apartments = new OpenAPIHono();
 
 apartments.openapi(getApartmentsRoute, async (c) => {
   const db = database();
-  const db_response = await db.select().from(schema.apartmentsTable);
 
-  console.log("Get apartments response", db_response);
+  const db_response = await db.query.apartment.findMany();
+
+  console.log("Get apartments response");
+  console.log(JSON.stringify(db_response));
+  console.log("---");
+  console.log("created: ", db_response[0].createdAt, "-end--");
   const response_data = GetApartmentsResponse.parse(db_response);
   return c.json(response_data, 200);
 });
@@ -31,8 +35,8 @@ apartments.openapi(getApartmentPerIdRoute, async (c) => {
   const db = database();
   const db_response = await db
     .select()
-    .from(schema.apartmentsTable)
-    .where(eq(schema.apartmentsTable.id, id));
+    .from(schema.apartment)
+    .where(eq(schema.apartment.id, id));
 
   console.log("Get apartment per d response", db_response);
 
@@ -48,9 +52,7 @@ apartments.openapi(createNewApartmentRoute, async (c) => {
   const apartmentData = c.req.valid("json");
   const db = database();
 
-  const db_response = await db
-    .insert(schema.apartmentsTable)
-    .values(apartmentData);
+  const db_response = await db.insert(schema.apartment).values(apartmentData);
 
   console.log("Insert response", db_response);
 
@@ -69,7 +71,7 @@ apartments.openapi(updateApartmentRoute, async (c) => {
   const apartmentData = c.req.valid("json");
   const db = database();
 
-  const originalApartment = await db.query.apartmentsTable.findFirst({
+  const originalApartment = await db.query.apartment.findFirst({
     where: (apartment, { eq }) => eq(apartment.id, id),
   });
 
@@ -81,12 +83,12 @@ apartments.openapi(updateApartmentRoute, async (c) => {
   }
 
   const db_response = await db
-    .update(schema.apartmentsTable)
+    .update(schema.apartment)
     .set({
       ...apartmentData,
       updatedAt: new Date(),
     })
-    .where(eq(schema.apartmentsTable.id, id));
+    .where(eq(schema.apartment.id, id));
 
   console.log("Update response", db_response);
 
@@ -105,8 +107,8 @@ apartments.openapi(deleteApartmentRoute, async (c) => {
   const db = database();
 
   const db_response = await db
-    .delete(schema.apartmentsTable)
-    .where(eq(schema.apartmentsTable.id, id));
+    .delete(schema.apartment)
+    .where(eq(schema.apartment.id, id));
 
   console.log("Delete response", db_response);
 

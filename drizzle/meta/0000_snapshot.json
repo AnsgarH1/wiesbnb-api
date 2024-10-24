@@ -1,11 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "181de779-11fc-42fb-ac95-366d6a76f2db",
+  "id": "26ec9a1a-1cad-460c-a953-29bc79c7c51c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "apartments_table": {
-      "name": "apartments_table",
+    "apartments": {
+      "name": "apartments",
       "columns": {
         "id": {
           "name": "id",
@@ -86,7 +86,7 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -94,7 +94,7 @@
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -107,8 +107,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "bookings_table": {
-      "name": "bookings_table",
+    "bookings": {
+      "name": "bookings",
       "columns": {
         "id": {
           "name": "id",
@@ -148,7 +148,7 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -156,7 +156,7 @@
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
@@ -179,10 +179,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bookings_table_apartmentId_apartments_table_id_fk": {
-          "name": "bookings_table_apartmentId_apartments_table_id_fk",
-          "tableFrom": "bookings_table",
-          "tableTo": "apartments_table",
+        "bookings_apartmentId_apartments_id_fk": {
+          "name": "bookings_apartmentId_apartments_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "apartments",
           "columnsFrom": [
             "apartmentId"
           ],

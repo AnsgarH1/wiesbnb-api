@@ -27,8 +27,8 @@ export const FullApartmentSchema = z
       example: 6799,
       description: "Price in €/cents",
     }),
-    updatedAt: z.string().datetime(),
-    createdAt: z.string().datetime(),
+    updatedAt: z.coerce.date(),
+    createdAt: z.coerce.date(),
   })
   .openapi("Apartment");
 
@@ -41,8 +41,8 @@ export const FullBookingSchema = z
       .openapi({ type: "boolean", example: false, default: false }),
     startDate: z.string().date().openapi({ format: "date" }),
     endDate: z.string().date().openapi({ format: "date" }),
-    createdAt: z.string().datetime().openapi({ format: "date" }),
-    updatedAt: z.string().datetime().openapi({ format: "date" }),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
     guestInfo: GuestInfoSchema,
     paymentInfo: PaymentInfoSchema,
   })

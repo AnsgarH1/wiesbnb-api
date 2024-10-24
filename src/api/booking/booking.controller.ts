@@ -17,7 +17,7 @@ booking.openapi(bookApartmentRoute, async (c) => {
   const db = database();
 
   // check if apartment exists
-  const apartment = await db.query.apartmentsTable.findFirst({
+  const apartment = await db.query.apartments.findFirst({
     where: (apartment, { eq }) => eq(apartment.id, requestParams.apartmentId),
   });
 
@@ -32,7 +32,7 @@ booking.openapi(bookApartmentRoute, async (c) => {
   }
 
   // check if no booking for this apartment id and start to end date exists
-  const existing_booking = await db.query.bookingsTable.findFirst({
+  const existing_booking = await db.query.bookings.findFirst({
     where: (booking, { and, or, eq, between }) =>
       and(
         eq(booking.apartmentId, requestParams.apartmentId),
@@ -70,7 +70,7 @@ booking.openapi(bookApartmentRoute, async (c) => {
         : requestParams.paymentInfo.paypalEmail,
   });
 
-  const insertData: typeof schema.bookingsTable.$inferInsert = {
+  const insertData: typeof schema.booking.$inferInsert = {
     apartmentId: requestParams.apartmentId,
     startDate: requestParams.startDate.toDateString(),
     endDate: requestParams.endDate.toDateString(),
@@ -78,7 +78,7 @@ booking.openapi(bookApartmentRoute, async (c) => {
     paymentInfo: db_paymentInfo,
   };
 
-  const db_response = await db.insert(schema.bookingsTable).values(insertData);
+  const db_response = await db.insert(schema.booking).values(insertData);
 
   if (db_response.error) {
     return c.json(
@@ -105,7 +105,7 @@ booking.openapi(cancelBookingRoute, async (c) => {
   const db = database();
 
   // check if booking exists
-  const booking = await db.query.bookingsTable.findFirst({
+  const booking = await db.query.bookings.findFirst({
     where: (booking, { eq }) => eq(booking.id, requestParams.bookingId),
   });
 
@@ -136,8 +136,8 @@ booking.openapi(cancelBookingRoute, async (c) => {
   }
 
   const db_response = await db
-    .delete(schema.bookingsTable)
-    .where(eq(schema.bookingsTable.id, requestParams.bookingId));
+    .delete(schema.booking)
+    .where(eq(schema.booking.id, requestParams.bookingId));
 
   console.log("cancel booking response", db_response);
 

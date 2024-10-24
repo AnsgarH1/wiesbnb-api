@@ -24,7 +24,7 @@ declare module "sst" {
 import * as cloudflare from "@cloudflare/workers-types";
 declare module "sst" {
   export interface Resource {
-    "Wiesbnb_Database": cloudflare.D1Database
-    "Wiesbnb_Server": cloudflare.Service
+    "d1": cloudflare.D1Database
+    "hono": cloudflare.Service
   }
 }

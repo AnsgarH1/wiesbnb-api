@@ -4,5 +4,5 @@ import * as schema from "./schema";
 import { Resource } from "sst";
 
 export const database = () => {
-  return drizzle(Resource.Wiesbnb_Database, { schema });
+  return drizzle(Resource.d1, { schema });
 };

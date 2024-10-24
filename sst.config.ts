@@ -6,11 +6,10 @@ export default $config({
       name: "Wiesbnb-Api",
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "cloudflare",
-      
     };
   },
   async run() {
-    const db = new sst.cloudflare.D1("Wiesbnb_Database");
+    const db = new sst.cloudflare.D1("d1");
 
     const databaseId = db.id.apply(
       (id) => new sst.Secret("Wiesbnb_DatabaseId", id)
@@ -26,17 +25,15 @@ export default $config({
       process.env.CLOUDFLARE_API_TOKEN
     );
 
-    const worker = new sst.cloudflare.Worker("Wiesbnb_Server", {
+    const worker = new sst.cloudflare.Worker("hono", {
       handler: "./src/server.ts",
       url: true,
       link: [databaseId, cloudflareAccountId, cloudflareApiToken, db],
-      domain: "wiesbnb-api.web-engineering.dev"
-      
     });
 
     return {
       api: worker.url,
-      db_id: databaseId,
+      db_id: databaseId.value,
     };
   },
 });
