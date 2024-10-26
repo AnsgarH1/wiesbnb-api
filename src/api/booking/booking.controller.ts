@@ -17,7 +17,7 @@ booking.openapi(bookApartmentRoute, async (c) => {
   const db = database();
 
   // check if apartment exists
-  const apartment = await db.query.apartments.findFirst({
+  const apartment = await db.query.apartment.findFirst({
     where: (apartment, { eq }) => eq(apartment.id, requestParams.apartmentId),
   });
 
@@ -32,7 +32,7 @@ booking.openapi(bookApartmentRoute, async (c) => {
   }
 
   // check if no booking for this apartment id and start to end date exists
-  const existing_booking = await db.query.bookings.findFirst({
+  const existing_booking = await db.query.booking.findFirst({
     where: (booking, { and, or, eq, between }) =>
       and(
         eq(booking.apartmentId, requestParams.apartmentId),
@@ -105,7 +105,7 @@ booking.openapi(cancelBookingRoute, async (c) => {
   const db = database();
 
   // check if booking exists
-  const booking = await db.query.bookings.findFirst({
+  const booking = await db.query.booking.findFirst({
     where: (booking, { eq }) => eq(booking.id, requestParams.bookingId),
   });
 

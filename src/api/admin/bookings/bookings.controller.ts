@@ -43,7 +43,7 @@ bookings.openapi(getBookingsRoute, async (c) => {
 bookings.openapi(getBookingPerIdRoute, async (c) => {
   const { id } = c.req.valid("param");
   const db = database();
-  const result = await db.query.bookings.findFirst({
+  const result = await db.query.booking.findFirst({
     where: (booking, { eq }) => eq(schema.booking.id, id),
   });
 
@@ -64,7 +64,7 @@ bookings.openapi(updateBookingRoute, async (c) => {
 
   const db = database();
 
-  const oldBookingId = await db.query.bookings.findFirst({
+  const oldBookingId = await db.query.booking.findFirst({
     where: (booking, { eq }) => eq(booking.id, requestParams.id),
   });
 
@@ -77,7 +77,7 @@ bookings.openapi(updateBookingRoute, async (c) => {
 
   const db_response = await db
     .update(schema.booking)
-    .set({ ...bookingData, updatedAt: new Date() })
+    .set({ ...bookingData, updatedAt: new Date().toISOString() })
     .where(eq(schema.booking.id, requestParams.id));
 
   console.log("Update booking response", db_response);

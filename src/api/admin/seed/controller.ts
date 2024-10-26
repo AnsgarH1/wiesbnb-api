@@ -141,7 +141,7 @@ seed.get("/", async (c) => {
 
   const db = database();
 
-  const alreadyPresentApartments = await db.query.apartments.findMany({
+  const alreadyPresentApartments = await db.query.apartment.findMany({
     where: (apartment, { eq, or }) =>
       or(
         eq(apartment.name, initialApartments[0].name),

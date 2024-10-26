@@ -86,7 +86,7 @@ apartments.openapi(updateApartmentRoute, async (c) => {
     .update(schema.apartment)
     .set({
       ...apartmentData,
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     })
     .where(eq(schema.apartment.id, id));
 
