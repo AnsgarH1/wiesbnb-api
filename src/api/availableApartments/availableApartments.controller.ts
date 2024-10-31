@@ -34,8 +34,8 @@ availableApartments.openapi(getAvailableApartmentsRoute, async (c) => {
   const allApartments = await db.query.apartment.findMany({
     where: (apartment, { and, gte, lte }) =>
       and(
-        gte(apartment.pricePerNight, minPrice),
-        lte(apartment.pricePerNight, maxPrice),
+        gte(apartment.pricePerNight, minPrice ?? 0),
+        lte(apartment.pricePerNight, maxPrice ?? Number.MAX_SAFE_INTEGER),
         gte(apartment.maxAdults, amountAdults),
         gte(apartment.maxChildren, amountChildren)
       ),
