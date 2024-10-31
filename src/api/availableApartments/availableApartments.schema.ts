@@ -36,10 +36,7 @@ export const GetAvailableApartmentsQueryParams = z.object({
     },
     description: "Amount of children (required)",
   }),
-  minPrice: z.coerce.number().optional().openapi({
-    description: "Minimum price in €/cents",
-    example: 4000,
-  }),
+  minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
   onlyAvailable: z.coerce
     .boolean()

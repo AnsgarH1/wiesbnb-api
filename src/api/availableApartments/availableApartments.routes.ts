@@ -26,7 +26,7 @@ export const getAvailableApartmentsRoute = createRoute({
         },
       },
 
-      description: "Create a new apartment",
+      description: "Returns all the preview of all available apartments found",
     },
     400: {
       content: {
@@ -63,8 +63,7 @@ export const getAvailableApartmentsPerIdRoute = createRoute({
           schema: GetAvailableApartmentsPerIdResponse,
         },
       },
-
-      description: "Create a new apartment",
+      description: "Returns the full apartment data with availbale status for requested time period",
     },
     400: {
       content: {
