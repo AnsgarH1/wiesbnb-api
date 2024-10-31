@@ -4,14 +4,37 @@ import {
   ApartmentIdSchema,
   BookingIdSchema,
   GuestInfoSchema,
-  ImageListSchema,
+  ImageSchema,
   PaymentInfoSchema,
 } from "./database.schema";
+
+export const ApartmentPreviewSchema = z
+  .object({
+    id: z.number().pipe(ApartmentIdSchema),
+    title: z.string(),
+    teaserText: z.string(),
+    numberOfRooms: z.coerce.number().openapi({ type: "integer", example: 2 }),
+    maxAdults: z.coerce.number().openapi({ type: "integer", example: 2 }),
+    maxChildren: z.coerce.number().openapi({ type: "integer", example: 2 }),
+    bedAmountAdults: z.coerce.number().openapi({ type: "integer", example: 2 }),
+    bedAmountChildren: z.coerce
+      .number()
+      .openapi({ type: "integer", example: 2 }),
+    preview: ImageSchema,
+    pricePerNight: z.coerce.number().openapi({
+      type: "integer",
+      example: 6799,
+      description: "Price in €/cents",
+    }),
+    rating: z.number().openapi({ type: "integer", example: 4.5 }),
+  })
+  .openapi("ApartmentPreview");
 
 export const FullApartmentSchema = z
   .object({
     id: z.number().pipe(ApartmentIdSchema),
-    name: z.string(),
+    title: z.string(),
+    teaserText: z.string(),
     description: z.string(),
     numberOfRooms: z.coerce.number().openapi({ type: "integer", example: 2 }),
     maxAdults: z.coerce.number().openapi({ type: "integer", example: 2 }),
@@ -20,15 +43,16 @@ export const FullApartmentSchema = z
     bedAmountChildren: z.coerce
       .number()
       .openapi({ type: "integer", example: 2 }),
-    images: ImageListSchema,
+    images: z.array(ImageSchema),
     adress: ApartmentAdressSchema,
     pricePerNight: z.coerce.number().openapi({
       type: "integer",
       example: 6799,
       description: "Price in €/cents",
     }),
-    updatedAt: z.coerce.date(),
-    createdAt: z.coerce.date(),
+    rating: z.number().openapi({ type: "integer", example: 4.5 }),
+    updatedAt: z.coerce.string().datetime().openapi({ format: "datetime" }),
+    createdAt: z.coerce.string().datetime().openapi({ format: "datetime" }),
   })
   .openapi("Apartment");
 
@@ -39,10 +63,10 @@ export const FullBookingSchema = z
     cancelled: z.coerce
       .boolean()
       .openapi({ type: "boolean", example: false, default: false }),
-    startDate: z.string().date().openapi({ format: "date" }),
-    endDate: z.string().date().openapi({ format: "date" }),
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date(),
+    startDate: z.coerce.string().date().openapi({ format: "date" }),
+    endDate: z.coerce.string().date().openapi({ format: "date" }),
+    createdAt: z.coerce.string().datetime().openapi({ format: "datetime" }),
+    updatedAt: z.coerce.string().datetime().openapi({ format: "datetime" }),
     guestInfo: GuestInfoSchema,
     paymentInfo: PaymentInfoSchema,
   })

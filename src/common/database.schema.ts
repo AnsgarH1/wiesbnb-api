@@ -1,4 +1,6 @@
-import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "@hono/zod-openapi";
+import * as schema from "../infrastructure/drizzle/schema";
 
 export const ApartmentIdSchema = z
   .number()
@@ -15,29 +17,23 @@ export const PaymentInfoSchema = z.object({
   }),
 });
 
-export const ImageListSchema = z.array(
-  z
-    .object({ url: z.string().url(), description: z.string() })
-    .openapi("Image")
-);
+export const ImageSchema = z
+  .object({ url: z.string().url(), description: z.string() })
+  .openapi("Image");
 
-export const LatitudeSchema = z
-  .number()
-  .min(-90)
-  .max(90)
-  .openapi({
-    description:
-      "Latitude of the location, -90=South Pole, 90=North Pole, 0=Equator",
-  });
+export const ImageListSchema = z.array(ImageSchema);
 
-export const LongitudeSchema = z
-  .number()
-  .min(-180)
-  .max(180)
-  .openapi({
-    description:
-      "Longitude of the location, Negative=West of prime-line, Positive=east of prime-line, 0=Prime-line",
-  });
+export const LatitudeSchema = z.number().min(-90).max(90).openapi({
+  title: "Latitude",
+  description:
+    "Latitude of the location, -90=South Pole, 90=North Pole, 0=Equator",
+});
+
+export const LongitudeSchema = z.number().min(-180).max(180).openapi({
+  title: "Longitude",
+  description:
+    "Longitude of the location, Negative=West of prime-line, Positive=east of prime-line, 0=Prime-line",
+});
 
 export const GuestInfoSchema = z.object({
   firstName: z.string(),
@@ -73,6 +69,12 @@ export const ApartmentAdressSchema = z.object({
     lng: LongitudeSchema,
   }),
 });
+
+export const InsertApartmentSchema = createInsertSchema(schema.apartment);
+export const InsertBookingSchema = createInsertSchema(schema.booking);
+
+export const SelectApartmentSchema = createSelectSchema(schema.apartment);
+export const SelectBookingSchema = createSelectSchema(schema.booking);
 
 export type ApartmentId = z.infer<typeof ApartmentIdSchema>;
 export type BookingId = z.infer<typeof BookingIdSchema>;

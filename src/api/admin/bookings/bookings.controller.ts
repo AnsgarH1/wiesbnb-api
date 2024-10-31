@@ -20,6 +20,7 @@ bookings.openapi(createNewBookingRoute, async (c) => {
   const bookingData = c.req.valid("json");
   const db = database();
 
+ 
   const db_response = await db.insert(schema.booking).values(bookingData);
 
   console.log("Insert response", db_response);
@@ -35,8 +36,9 @@ bookings.openapi(getBookingsRoute, async (c) => {
   const db = database();
   const db_response = await db.select().from(schema.booking);
 
-  console.log("Get bookings response", db_response);
+  console.log("Bookings", JSON.stringify(db_response));
   const response_data = GetBookingsResponse.parse(db_response);
+  console.log("Get bookings response data", response_data);
   return c.json(response_data, 200);
 });
 

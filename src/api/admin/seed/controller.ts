@@ -3,22 +3,16 @@ import { Hono } from "hono";
 import { database } from "../../../infrastructure/drizzle";
 import * as schema from "../../../infrastructure/drizzle/schema";
 import { z } from "zod";
-import { FullApartmentSchema } from "../../../common/response.schema";
-
-// eslint-disable-next-line eslint@typescript-eslint/no-unused-vars
-const ApartmentInsertSchema = FullApartmentSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).array();
+import { InsertApartmentSchema } from "../../../common/database.schema";
 
 export const seed = new Hono();
 
 seed.get("/", async (c) => {
   console.log("Seeding apartments");
-  const initialApartments: z.infer<typeof ApartmentInsertSchema> = [
+  const initialApartments = [
     {
-      name: "Moritzstraße 19",
+      title: "Moritzstraße 19",
+      teaserText: "Nur 5 Minuten von der Innenstadt entfernt",
       description: "",
       numberOfRooms: 2,
       maxAdults: 5,
@@ -79,10 +73,12 @@ seed.get("/", async (c) => {
         },
       },
       pricePerNight: 26300,
+      rating: 4.6,
     },
     {
-      name: "Kirchgasse 17",
-      description: "Direkt in der Innenstadt",
+      title: "Kirchgasse 17",
+      teaserText: "Direkt in der Innenstadt",
+      description: "",
       numberOfRooms: 1,
       maxAdults: 2,
       maxChildren: 1,
@@ -136,33 +132,34 @@ seed.get("/", async (c) => {
         },
       },
       pricePerNight: 26300,
+      rating: 3.33,
     },
-  ];
+  ] satisfies z.infer<typeof InsertApartmentSchema>[];
 
   const db = database();
 
   const alreadyPresentApartments = await db.query.apartment.findMany({
     where: (apartment, { eq, or }) =>
       or(
-        eq(apartment.name, initialApartments[0].name),
-        eq(apartment.name, initialApartments[1].name)
+        eq(apartment.title, initialApartments[0].title),
+        eq(apartment.title, initialApartments[1].title)
       ),
   });
 
   if (alreadyPresentApartments.length > 0) {
     console.log(
       "Apartments already present in the database: ",
-      alreadyPresentApartments.map((a) => a.name)
+      alreadyPresentApartments.map((a) => a.title)
     );
     c.text(
       `Apartments already present in the database: ${alreadyPresentApartments.map(
-        (a) => a.name
+        (a) => a.title
       )}
     `
     );
   }
   const notPresentApartments = initialApartments.filter(
-    (a) => !alreadyPresentApartments.some((b) => b.name === a.name)
+    (a) => !alreadyPresentApartments.some((b) => b.title === a.title)
   );
   console.log("Not present apartments", notPresentApartments);
 

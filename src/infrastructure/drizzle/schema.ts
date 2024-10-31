@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import {
@@ -12,8 +11,9 @@ import {
 
 export const apartment = sqliteTable("apartments", {
   id: int().$type<ApartmentId>().primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
+  title: text().notNull(),
   description: text().notNull(),
+  teaserText: text().notNull(),
   numberOfRooms: int().notNull(),
   maxAdults: int().notNull(),
   maxChildren: int().notNull(),
@@ -22,8 +22,13 @@ export const apartment = sqliteTable("apartments", {
   images: text({ mode: "json" }).$type<ImageList>().notNull(),
   adress: text({ mode: "json" }).$type<ApartmentAddress>().notNull(),
   pricePerNight: int().notNull(),
-  createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
-  updatedAt: text().default(sql`(CURRENT_TIMESTAMP)`),
+  rating: int().notNull(),
+  createdAt: text()
+    .$defaultFn(() => new Date().toISOString())
+    .notNull(),
+  updatedAt: text()
+    .$defaultFn(() => new Date().toISOString())
+    .notNull(),
 });
 
 export const booking = sqliteTable("bookings", {
@@ -31,11 +36,15 @@ export const booking = sqliteTable("bookings", {
   apartmentId: int()
     .notNull()
     .references(() => apartment.id),
-  cancelled: int({ mode: "boolean" }).default(false),
+  cancelled: int({ mode: "boolean" }).default(false).notNull(),
   startDate: text().notNull(),
   endDate: text().notNull(),
-  createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
-  updatedAt: text().default(sql`(CURRENT_TIMESTAMP)`),
+  createdAt: text()
+    .$defaultFn(() => new Date().toISOString())
+    .notNull(),
+  updatedAt: text()
+    .$defaultFn(() => new Date().toISOString())
+    .notNull(),
   guestInfo: text({ mode: "json" }).$type<GuestInfo>(),
   paymentInfo: text({ mode: "json" }).$type<PaymentInfo>(),
 });

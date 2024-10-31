@@ -39,13 +39,13 @@ booking.openapi(bookApartmentRoute, async (c) => {
         or(
           between(
             booking.startDate,
-            requestParams.startDate.toDateString(),
-            requestParams.endDate.toDateString()
+            requestParams.startDate,
+            requestParams.endDate
           ),
           between(
             booking.endDate,
-            requestParams.startDate.toDateString(),
-            requestParams.endDate.toDateString()
+            requestParams.startDate,
+            requestParams.endDate
           )
         )
       ),
@@ -72,8 +72,8 @@ booking.openapi(bookApartmentRoute, async (c) => {
 
   const insertData: typeof schema.booking.$inferInsert = {
     apartmentId: requestParams.apartmentId,
-    startDate: requestParams.startDate.toDateString(),
-    endDate: requestParams.endDate.toDateString(),
+    startDate: requestParams.startDate,
+    endDate: requestParams.endDate,
     guestInfo: db_guestInfo,
     paymentInfo: db_paymentInfo,
   };

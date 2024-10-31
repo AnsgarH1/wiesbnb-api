@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "26ec9a1a-1cad-460c-a953-29bc79c7c51c",
+  "id": "43bd26ac-d2d9-4816-9f79-59472f56d1f2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "apartments": {
@@ -14,8 +14,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "name": {
-          "name": "name",
+        "title": {
+          "name": "title",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -23,6 +23,13 @@
         },
         "description": {
           "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "teaserText": {
+          "name": "teaserText",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -84,21 +91,26 @@
           "notNull": true,
           "autoincrement": false
         },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(CURRENT_TIMESTAMP)"
+          "notNull": true,
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(CURRENT_TIMESTAMP)"
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -128,7 +140,7 @@
           "name": "cancelled",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": false
         },
@@ -150,17 +162,15 @@
           "name": "createdAt",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(CURRENT_TIMESTAMP)"
+          "notNull": true,
+          "autoincrement": false
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(CURRENT_TIMESTAMP)"
+          "notNull": true,
+          "autoincrement": false
         },
         "guestInfo": {
           "name": "guestInfo",

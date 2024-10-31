@@ -2,37 +2,18 @@ import { z } from "@hono/zod-openapi";
 import {
   ApartmentIdSchema,
   BookingIdSchema,
+  GuestInfoSchema,
 } from "../../common/database.schema";
 
 export const CreateNewBookingRequestBody = z.object({
   apartmentId: z.coerce.number().pipe(ApartmentIdSchema),
-  startDate: z.coerce.date().openapi({
+  startDate: z.coerce.string().date().openapi({
     description: "The start date of the booking in format YYYY-MM-DD",
-    example: "2022-01-01",
+    example: "2024-10-01",
+    format: "date",
   }),
-  endDate: z.coerce.date(),
-  guestInfo: z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    birthDate: z.coerce.date(),
-    email: z.string().email(),
-    phone: z.string(),
-    address: z.object({
-      street: z.string(),
-      city: z.string(),
-      postalCode: z.string(),
-      country: z.string(),
-    }),
-    additionalGuests: z
-      .array(
-        z.object({
-          firstName: z.string(),
-          lastName: z.string(),
-          birthDate: z.coerce.date(),
-        })
-      )
-      .optional(),
-  }),
+  endDate: z.coerce.string().date().openapi({ format: "date", example: "2024-10-15" }),
+  guestInfo: GuestInfoSchema,
   paymentInfo: z.discriminatedUnion("paymentType", [
     z
       .object({

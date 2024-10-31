@@ -1,25 +1,83 @@
 import { z } from "@hono/zod-openapi";
 
-import { FullApartmentSchema } from "../../common/response.schema";
-import { LatitudeSchema, LongitudeSchema } from "../../common/database.schema";
+import {
+  ApartmentPreviewSchema,
+  FullApartmentSchema,
+} from "../../common/response.schema";
+import {
+  ApartmentIdSchema,
+  LatitudeSchema,
+  LongitudeSchema,
+} from "../../common/database.schema";
 
 export const GetAvailableApartmentsResponse = z.array(
-  FullApartmentSchema.and(z.object({ available: z.boolean() }))
+  ApartmentPreviewSchema.and(z.object({ available: z.boolean() })).openapi(
+    "ApartmentPreview"
+  )
 );
 
 export const GetAvailableApartmentsQueryParams = z.object({
-  startDate: z.coerce.date().openapi({ format: "date" }),
-  endDate: z.coerce.date().openapi({ format: "date" }),
-  amountAdults: z.coerce.number(),
-  amountChildren: z.coerce.number(),
-  minPrice: z.coerce.number().optional().default(0),
-  maxPrice: z.coerce.number().optional().default(1_000_000),
-  onlyAvailable: z.coerce.boolean().optional().default(true).default(true),
+  startDate: z.coerce
+    .string()
+    .date()
+    .openapi({ format: "date", required: ["Required"] }),
+  endDate: z.coerce.string().date().openapi({ format: "date" }),
+  amountAdults: z.coerce.number().openapi({
+    type: "integer",
+    param: {
+      required: true,
+    },
+    description: "Amount of adults (required)",
+  }),
+  amountChildren: z.coerce.number().openapi({
+    type: "integer",
+    param: {
+      required: true,
+    },
+    description: "Amount of children (required)",
+  }),
+  minPrice: z.coerce.number().optional().openapi({
+    description: "Minimum price in €/cents",
+    example: 4000,
+  }),
+  maxPrice: z.coerce.number().optional(),
+  onlyAvailable: z.coerce
+    .boolean()
+    .optional()
+    .default(true)
+    .openapi({ type: "boolean" }),
   bbox: z
     .tuple([LongitudeSchema, LatitudeSchema, LongitudeSchema, LatitudeSchema])
     .optional()
     .openapi({
       description:
         "Bounding box for the search in order: min Longitude (left), min Latitude (bottom), max Longitude (right), max Latitude (top)",
+    }),
+});
+
+export const GetAvailableApartmentsPerIdResponse = FullApartmentSchema.and(
+  z.object({ available: z.boolean() })
+).openapi("ApartmentWithAvailableStatus");
+
+export const GetAvailableApartmentsPerIdQueryParams = z.object({
+  startDate: z.coerce
+    .string()
+    .date()
+    .openapi({ format: "date", example: "2024-10-01" }),
+  endDate: z.coerce
+    .string()
+    .date()
+    .openapi({ format: "date", example: "2024-10-15" }),
+});
+
+export const GetAvailableApartmentsPerIdParams = z.object({
+  id: z.coerce
+    .number()
+    .pipe(ApartmentIdSchema)
+    .openapi({
+      param: {
+        name: "id",
+        in: "path",
+      },
     }),
 });

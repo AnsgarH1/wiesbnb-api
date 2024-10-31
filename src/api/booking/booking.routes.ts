@@ -13,7 +13,7 @@ import {
 export const bookApartmentRoute = createRoute({
   method: "post",
   description: "Book an apartment",
-  tags: ["Public Endpoints"],
+  tags: ["Booking"],
   path: "/submitBooking",
   request: {
     body: {
@@ -54,8 +54,8 @@ export const bookApartmentRoute = createRoute({
 
 export const cancelBookingRoute = createRoute({
   method: "post",
-  path: "/cancelBooking",
-  tags: ["Public Endpoints"],
+  path: "/cancelBooking/{id}",
+  tags: ["Booking"],
   description: "Cancel a booking for an apartment",
   request: {
     params: CancelBookingRequestParams,
