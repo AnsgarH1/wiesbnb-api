@@ -35,7 +35,7 @@ publicRoutes.get("/", swaggerUI({ url: "/api/doc" }));
 publicRoutes.route("/", availableApartments);
 publicRoutes.route("/", booking);
 
-const adminRoutes = new OpenAPIHono().basePath("/api");
+const adminRoutes = new OpenAPIHono().basePath("/api/admin");
 adminRoutes.doc31("/doc", (c) => ({
   openapi: "3.1.0",
   info: {
@@ -58,6 +58,6 @@ adminRoutes.route("/", adminBookings);
 adminRoutes.route("/seed", seed);
 
 app.route("/", publicRoutes);
-app.route("/admin", adminRoutes);
+app.route("/", adminRoutes);
 
 export default app;
