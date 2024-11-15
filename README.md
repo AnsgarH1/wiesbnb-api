@@ -40,39 +40,51 @@ This will run `sst dev` and deploy all needed Ressources to a personal developme
 
 Below you find a brief overview of the available endpoints.
 
-> For more details run the server yourself and open the `/` Route to see all currently implemented Routes inside the Swagger-UI
+> For more details run the server yourself and open the `/` Route to see all currently implemented Routes inside the [ Public Swagger-UI](wiesbnb.web-engineering.dev/api) and [Admin Swagger-UI](wiesbnb.web-engineering.dev/api/admin)
 
 ## Apartments API (public)
 
-`GET /apartments`
+`GET /api/availableApartments`
 List available apartments (with optional filters like date range, rooms, adults, and children).
 
-`GET /apartments/:id`
+`GET /api/availableApartments/{id}`
 Fetch details of a specific apartment by its ID.
 
 ## Bookings API (public)
 
-`POST /bookings`
+`POST /api/submitBooking`
 Create a new booking for an apartment.
 
-`GET /bookings/:id`
+`POST /api/cancelBooking/{id}`
 Fetch details of a specific booking.
 
 ## Admin API (will get restricted at some point)
 
-`POST /admin/apartments`
+`GET /api/admin/apartments`
+Get all apartments 
+
+`GET /api/admin/apartments/{id}`
+Get apartment per id 
+
+`POST /api/admin/apartments`
 Create a new apartment 
 
-`(TODO) PUT /admin/apartments/:id`
+`PUT /admin/apartments/{id}`
 Update an existing apartment (admin only).
 
-`(TODO) DELETE /admin/apartments/:id`
+`DELETE /admin/apartments/{id}`
 Delete an apartment (admin only).
 
-`(TODO) GET /admin/bookings`
+`GET /admin/bookings`
 List all bookings (admin only).
 
-`(TODO) DELETE /admin/bookings/:id`
+`GET /admin/bookings/{id}`
+List all bookings (admin only).
+
+`PUT /admin/bookings/{id}`
+Update an existing booking (admin only).
+
+`DELETE /admin/bookings/{id}`
 Cancel or delete a booking (admin only).
 
 # Used Technologies
