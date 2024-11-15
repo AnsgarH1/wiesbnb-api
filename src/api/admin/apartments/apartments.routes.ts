@@ -91,7 +91,7 @@ export const getApartmentsRoute = createRoute({
 
 export const getApartmentPerIdRoute = createRoute({
   method: "get",
-  path: "/apartments/:id",
+  path: "/apartments/{id}",
   tags: ["Admin Endpoints"],
   request: {
     params: GetApartmentPerIdParams,
@@ -125,7 +125,7 @@ export const getApartmentPerIdRoute = createRoute({
 });
 
 export const updateApartmentRoute = createRoute({
-  path: "/apartments/:id",
+  path: "/apartments/{id}",
   method: "put",
   tags: ["Admin Endpoints"],
   request: {
@@ -139,11 +139,6 @@ export const updateApartmentRoute = createRoute({
   },
   responses: {
     204: {
-      content: {
-        "application/json": {
-          schema: SuccessResponse,
-        },
-      },
       description: "Retrieve an apartment per id",
     },
     400: {
@@ -175,11 +170,6 @@ export const deleteApartmentRoute = createRoute({
   },
   responses: {
     204: {
-      content: {
-        "application/json": {
-          schema: SuccessResponse,
-        },
-      },
       description: "Delete an apartment per id",
     },
     400: {

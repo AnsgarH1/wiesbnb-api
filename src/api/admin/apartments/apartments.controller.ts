@@ -22,10 +22,13 @@ apartments.openapi(getApartmentsRoute, async (c) => {
 
   const db_response = await db.query.apartment.findMany();
 
-  console.log("Get apartments response");
-  console.log(JSON.stringify(db_response));
+  console.log(`Found ${db_response.length} apartments to return`);
   console.log("---");
-  console.log("created: ", db_response[0].createdAt, "-end--");
+  console.log(
+    "created: ",
+    db_response.length > 0 && db_response[0].createdAt,
+    "-end--"
+  );
   const response_data = GetApartmentsResponse.parse(db_response);
   return c.json(response_data, 200);
 });
@@ -93,10 +96,7 @@ apartments.openapi(updateApartmentRoute, async (c) => {
   console.log("Update response", db_response);
 
   if (db_response.success) {
-    return c.json(
-      { message: "Apartment updated successfully", code: 204 },
-      204
-    );
+    return c.body(null, 204);
   } else {
     return c.json({ message: "Failed to update apartment", code: 500 }, 500);
   }
@@ -113,10 +113,7 @@ apartments.openapi(deleteApartmentRoute, async (c) => {
   console.log("Delete response", db_response);
 
   if (db_response.success) {
-    return c.json(
-      { message: "Apartment deleted successfully", code: 204 },
-      204
-    );
+    return c.body(null, 204);
   } else {
     return c.json({ message: "Failed to delete apartment", code: 500 }, 500);
   }
