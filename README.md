@@ -40,7 +40,7 @@ This will run `sst dev` and deploy all needed Ressources to a personal developme
 
 Below you find a brief overview of the available endpoints.
 
-> For more details run the server yourself and open the `/` Route to see all currently implemented Routes inside the [ Public Swagger-UI](wiesbnb.web-engineering.dev/api) and [Admin Swagger-UI](wiesbnb.web-engineering.dev/api/admin)
+> For more details run the server yourself and open the `/` Route to see all currently implemented Routes inside the [ Public Swagger-UI](https://wiesbnb.web-engineering.dev/api) and [Admin Swagger-UI](https://wiesbnb.web-engineering.dev/api/admin)
 
 ## Apartments API (public)
 
